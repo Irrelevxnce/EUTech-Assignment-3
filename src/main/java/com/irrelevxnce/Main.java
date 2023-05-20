@@ -10,5 +10,6 @@ public class Main {
     	UIDSecrets uidss = new UIDSecrets();
     	LoginForm login = new LoginForm(uidss.getLoginInfo());
     	login.main(args);
+    	
     }
 }

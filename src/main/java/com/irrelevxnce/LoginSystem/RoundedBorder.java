@@ -1,7 +1,15 @@
 package com.irrelevxnce.LoginSystem;
 
+import java.awt.BasicStroke;
+import java.awt.Component;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Insets;
+import java.awt.Paint;
+import java.awt.RenderingHints;
+import java.awt.Stroke;
+
 import javax.swing.border.AbstractBorder;
-import java.awt.*;
 
 public class RoundedBorder extends AbstractBorder {
     int lineSize, cornerSize;

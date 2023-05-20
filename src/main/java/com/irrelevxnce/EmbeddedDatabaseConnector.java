@@ -1,24 +1,22 @@
-package com.irrelevxnce; 
+package com.irrelevxnce;
 
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
+import java.awt.Dimension;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Base64;
 import java.util.HashMap;
 
-import org.bouncycastle.crypto.generators.BCrypt;
+import javax.swing.JFrame;
 
 public class EmbeddedDatabaseConnector {
-    public HashMap<String, String> loginToParse= new HashMap<String, String>();
+    public HashMap<String, String> loginToParse= new HashMap<>();
     public String tableName;
     String url = "jdbc:derby:UIDSecrets;create=true";
     private Connection connection;
-    public HashMap<Integer, String> items = new HashMap<Integer, String>();
+    public HashMap<Integer, String> items = new HashMap<>();
 
     public HashMap<String, String> connect(Boolean creating, Boolean UIDSecrets, Boolean creatingUser, String nullableName, String nullableSecret, Boolean defaultFalse, String nullableAmount, String nullableDescription, String nullablePrice) throws SQLException, NoSuchAlgorithmException {
         connection = DriverManager.getConnection(url);
@@ -66,18 +64,19 @@ public class EmbeddedDatabaseConnector {
         }
 		return loginToParse;
     }
-    
-    public String connect(String sqlMaker) throws SQLException {
-    	 connection = DriverManager.getConnection(url);
-         Statement s = connection.createStatement();
-         try {
-        	 s.executeUpdate(sqlMaker);
-        	 return "Updated Succesfully.";
-         } catch (Exception e) {
-        	 return "Update Failed.";
-         }
+
+    public void connect(String sqlMaker) throws SQLException {
+    	 try {
+			connection = DriverManager.getConnection(url);
+			 Statement s = connection.createStatement();
+			 s.executeUpdate(sqlMaker);
+		} catch (NullPointerException e1) {
+			JFrame frame2 = new JFrame("Delete Item");
+			frame2.setPreferredSize(new Dimension(550, 100));
+			WelcomePage.launchFrame(frame2, "Item with specified ID does not exist.");
+		}
     }
-    
+
     public Boolean getAdminStatus(String username) throws SQLException {
     	connection = DriverManager.getConnection(url);
     	Statement s = connection.createStatement();
@@ -88,8 +87,8 @@ public class EmbeddedDatabaseConnector {
     	}
 		return isAdmin;
     }
-    
-    
+
+
 
     public void disconnect() throws SQLException {
         if (connection != null && !connection.isClosed()) {

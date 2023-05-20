@@ -1,67 +1,56 @@
 package com.irrelevxnce;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
-
-import org.apache.commons.lang3.text.WordUtils;
-import org.apache.fontbox.FontBoxFont;
-import org.apache.fontbox.ttf.TrueTypeFont;
-import org.apache.pdfbox.pdmodel.*;
-import org.apache.pdfbox.pdmodel.common.PDRectangle;
-import org.apache.pdfbox.pdmodel.font.PDFontFactory;
-import org.apache.pdfbox.pdmodel.font.PDType0Font;
-import org.apache.pdfbox.pdmodel.font.PDType1Font;
-
-import javax.swing.JTextArea;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import javax.swing.ScrollPaneConstants;
-import java.sql.SQLException;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.HeadlessException;
 import java.awt.Toolkit;
 import java.io.File;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.sql.SQLException;
+import java.util.Base64;
+import java.util.HashMap;
 
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.SpringLayout;
+import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+import javax.swing.WindowConstants;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.SoftBevelBorder;
+
+import org.apache.commons.lang3.text.WordUtils;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.bouncycastle.crypto.generators.BCrypt;
 
 import com.irrelevxnce.LoginSystem.GradientPanel;
 import com.irrelevxnce.LoginSystem.LoginForm;
 import com.irrelevxnce.LoginSystem.NoScalingIcon;
 import com.irrelevxnce.LoginSystem.RoundedBorder;
 
-import javax.swing.SpringLayout;
-import javax.swing.border.SoftBevelBorder;
-
-import org.bouncycastle.crypto.generators.BCrypt;
-
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-
-import java.awt.Color;
-import java.awt.Component;
-
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
-import javax.swing.border.BevelBorder;
-import javax.swing.JLabel;
-import java.awt.Font;
-import java.awt.HeadlessException;
-
-import javax.swing.SwingConstants;
-import javax.swing.UIManager;
-import javax.swing.WindowConstants;
-
-import java.awt.BorderLayout;
-
 public class WelcomePage {
-	
+
 	static String username;
 	private JFrame frame;
 	private String UID;
@@ -69,13 +58,14 @@ public class WelcomePage {
 	private Boolean isAdministrator;
 	EmbeddedDatabaseConnector edc = new EmbeddedDatabaseConnector();
 	HashMap <Integer, String> items;
-	
+
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				try {
 					WelcomePage window = new WelcomePage(username);
@@ -89,18 +79,18 @@ public class WelcomePage {
 
 	/**
 	 * Create the application.
-	 * @throws SQLException 
-	 * @throws NoSuchAlgorithmException 
+	 * @throws SQLException
+	 * @throws NoSuchAlgorithmException
 	 */
 	public WelcomePage(String username) throws SQLException, NoSuchAlgorithmException {
-		this.username = username;
+		WelcomePage.username = username;
 		initialize();
 	}
 
 	/**
 	 * Initialize the contents of the frame.
-	 * @throws SQLException 
-	 * @throws NoSuchAlgorithmException 
+	 * @throws SQLException
+	 * @throws NoSuchAlgorithmException
 	 */
 	@SuppressWarnings("deprecation")
 	private void initialize() throws SQLException, NoSuchAlgorithmException {
@@ -117,10 +107,10 @@ public class WelcomePage {
 	    int screenWidth = screenSize.width;
 	    frame.setSize((int) (screenWidth / 1.5), (int) (screenHeight / 1.5));
 	    frame.setLocation(screenWidth / 6, screenHeight / 6);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		SpringLayout springLayout = new SpringLayout();
 		frame.getContentPane().setLayout(springLayout);
-		
+
 		JPanel sidePanel = new GradientPanel(new Color(48, 48, 48), new Color(131, 92, 230));
 		sidePanel.setVisible(false);
 		sidePanel.setBorder(new SoftBevelBorder(BevelBorder.RAISED, new Color(255, 255, 255), new Color(255, 255, 255), new Color(255, 255, 255), new Color(255, 255, 255)));
@@ -132,7 +122,7 @@ public class WelcomePage {
 		frame.getContentPane().add(sidePanel);
 		SpringLayout sl_sidePanel = new SpringLayout();
 		sidePanel.setLayout(sl_sidePanel);
-		
+
 		JPanel mainPanel = new GradientPanel(new Color(230, 92, 115), new Color(131, 92, 230));
 		springLayout.putConstraint(SpringLayout.NORTH, mainPanel, 0, SpringLayout.NORTH, frame.getContentPane());
 		springLayout.putConstraint(SpringLayout.WEST, mainPanel, 0, SpringLayout.WEST, frame.getContentPane());
@@ -141,7 +131,7 @@ public class WelcomePage {
 		frame.getContentPane().add(mainPanel);
 		SpringLayout sl_mainPanel = new SpringLayout();
 		mainPanel.setLayout(sl_mainPanel);
-		
+
 		JButton menuButton = new JButton("");
 		sl_mainPanel.putConstraint(SpringLayout.SOUTH, menuButton, 60, SpringLayout.NORTH, mainPanel);
 		sl_mainPanel.putConstraint(SpringLayout.EAST, menuButton, 60, SpringLayout.WEST, mainPanel);
@@ -159,7 +149,7 @@ public class WelcomePage {
 			menuButton.setVisible(false);
 		});
 		mainPanel.add(menuButton);
-		
+
 		JButton addItemButton = new JButton("");
 		addItemButton.setRolloverEnabled(false);
 		NoScalingIcon btnAddIcon = new NoScalingIcon(new ImageIcon(LoginForm.class.getResource("/com/irrelevxnce/img/assignment_add_FILL0_wght400_GRAD0_opsz48.png")));
@@ -174,7 +164,7 @@ public class WelcomePage {
 					if (edc.getAdminStatus(username)) {
 						JFrame frame1 = new JFrame("Add Item");
 					    frame1.setIconImage(Toolkit.getDefaultToolkit().getImage(LoginForm.class.getResource("/com/irrelevxnce/img/EuTech_logo.png")));
-					    frame1.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+					    frame1.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 					    JPanel panel1 = new JPanel();
 					    panel1.setLayout(new BoxLayout(panel1, BoxLayout.Y_AXIS));
 					    panel1.setOpaque(true);
@@ -187,19 +177,19 @@ public class WelcomePage {
 					    JLabel itemnameLabel = new JLabel("Item name: ");
 					    inputpanel.add(itemnameLabel);
 					    inputpanel.add(name);
-					    
+
 					    JLabel amountLabel = new JLabel("Amount: ");
 					    inputpanel.add(amountLabel);
 					    inputpanel.add(amount);
-					    
+
 					    JLabel descLabel = new JLabel("Description: ");
 					    inputpanel.add(descLabel);
 					    inputpanel.add(description);
-					    
+
 					    JLabel priceLabel = new JLabel("Price: ");
 					    inputpanel.add(priceLabel);
 					    inputpanel.add(price);
-					    
+
 					    JButton button = new JButton("Enter");
 					    frame1.getRootPane().setDefaultButton(button);
 					    button.addActionListener(z -> {
@@ -209,11 +199,16 @@ public class WelcomePage {
 							String itemPrice = price.getText();
 							try {
 								edc.connect(true, false, false, itemName, "", false, itemAmount, itemDescription, itemPrice);
+								JFrame frame2 = new JFrame("Add item to database");
+								frame2.setPreferredSize(new Dimension(550, 100));
+								launchFrame(frame2, "Item added successfully. Log in to your account again to refresh the database.");
 							} catch (NoSuchAlgorithmException e1) {
 								// TODO Auto-generated catch block
 								e1.printStackTrace();
 							} catch (SQLException e1) {
-								// TODO Auto-generated catch block
+								JFrame frame2 = new JFrame("Add item to database.");
+								frame2.setPreferredSize(new Dimension(550, 100));
+								launchFrame(frame2, "Error regarding SQL. Try to reduce the length of the item description.");
 								e1.printStackTrace();
 							}
 					    });
@@ -239,7 +234,7 @@ public class WelcomePage {
 				}
 		});
 		mainPanel.add(addItemButton);
-		
+
 		JButton editItemButton = new JButton("");
 		NoScalingIcon btnEditIcon = new NoScalingIcon(new ImageIcon(LoginForm.class.getResource("/com/irrelevxnce/img/edit_note_FILL0_wght400_GRAD0_opsz48.png")));
 		editItemButton.setIcon(btnEditIcon);
@@ -253,7 +248,7 @@ public class WelcomePage {
 				if(edc.getAdminStatus(username)) {
 					JFrame frame1 = new JFrame("Edit Item");
 				    frame1.setIconImage(Toolkit.getDefaultToolkit().getImage(LoginForm.class.getResource("/com/irrelevxnce/img/EuTech_logo.png")));
-				    frame1.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				    frame1.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 				    JPanel panel1 = new JPanel();
 				    panel1.setLayout(new BoxLayout(panel1, BoxLayout.Y_AXIS));
 				    panel1.add(createVerticalStrut(10));
@@ -305,7 +300,7 @@ public class WelcomePage {
 				        		if (!amountUpdate.isBlank()) {
 				        			System.out.println("xd2");
 				        			sql = sql.concat(" AMOUNT = '" + amountUpdate + "',");
-				        		} 
+				        		}
 				        		if (!descUpdate.isBlank()) {
 				        			System.out.println("xd3");
 				        			sql = sql.concat(" DESCRIPTION = '" + descUpdate + "',");
@@ -324,10 +319,13 @@ public class WelcomePage {
 				        		finalSQL = finalSQL.concat(" WHERE ITEMID = '" + itemNameGetter + "'");
 				        		System.out.println("asdasdas" + finalSQL);
 				        		edc.connect(finalSQL);
+				        		JFrame frame2 = new JFrame("Account status");
+								frame2.setPreferredSize(new Dimension(550, 100));
+								launchFrame(frame2, "Successfully edited selected item. Log in to your account to refresh the database.");
 				    		} catch(Exception e5) {
 				    			System.out.println("Error at " + finalSQL);
 				    		}
-				    		
+
 				    	} catch (Exception e2) {
 				    		System.out.println("Item not found");
 				    	}
@@ -353,7 +351,7 @@ public class WelcomePage {
 			}
 		});
 		mainPanel.add(editItemButton);
-		
+
 		JButton deleteButton = new JButton("");
 		NoScalingIcon btnDeleteIcon = new NoScalingIcon(new ImageIcon(LoginForm.class.getResource("/com/irrelevxnce/img/delete_FILL0_wght400_GRAD0_opsz48.png")));
 		deleteButton.setIcon(btnDeleteIcon);
@@ -367,7 +365,7 @@ public class WelcomePage {
 				if(edc.getAdminStatus(username)) {
 					JFrame frame1 = new JFrame("Delete Item");
 				    frame1.setIconImage(Toolkit.getDefaultToolkit().getImage(LoginForm.class.getResource("/com/irrelevxnce/img/EuTech_logo.png")));
-				    frame1.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				    frame1.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 				    JPanel panel1 = new JPanel();
 				    panel1.setLayout(new BoxLayout(panel1, BoxLayout.Y_AXIS));
 				    panel1.setOpaque(true);
@@ -381,7 +379,14 @@ public class WelcomePage {
 				    frame1.getRootPane().setDefaultButton(button);
 					button.addActionListener(z -> {
 				        int id = Integer.parseInt(itemId.getText());
-						String [] tokens = items.get(id).split(",");
+						String[] tokens = null;
+						try {
+							tokens = items.get(id).split(",");
+						} catch (NullPointerException e1) {
+							JFrame frame2 = new JFrame("Delete Item");
+							frame2.setPreferredSize(new Dimension(350, 100));
+							WelcomePage.launchFrame(frame2, "Item with specified ID does not exist.");
+						}
 						String itemNameGetter = tokens[0].substring(4);
 						String sql = "DELETE FROM Inventory WHERE ITEMID = '" + itemNameGetter + "'";
 						try {
@@ -391,6 +396,9 @@ public class WelcomePage {
 							e1.printStackTrace();
 						}
 						System.out.println("Deleted " + itemNameGetter);
+						JFrame frame2 = new JFrame("Delete Item");
+						frame2.setPreferredSize(new Dimension(450, 100));
+						launchFrame(frame2, "Successfully deleted " + itemNameGetter + ". Login again to refresh the databse.");
 					});
 					inputpanel.add(button);
 					panel1.add(inputpanel);
@@ -414,7 +422,7 @@ public class WelcomePage {
 			}
 		});
 		mainPanel.add(deleteButton);
-		
+
 		JButton viewButton = new JButton("");
 		sl_mainPanel.putConstraint(SpringLayout.WEST, viewButton, 168, SpringLayout.WEST, mainPanel);
 		sl_mainPanel.putConstraint(SpringLayout.SOUTH, viewButton, -358, SpringLayout.SOUTH, mainPanel);
@@ -429,7 +437,7 @@ public class WelcomePage {
 		viewButton.addActionListener(e -> {
 			try {
 				JFrame frame1 = new JFrame("View Inventory");
-				frame1.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				frame1.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 				JPanel panel1 = new JPanel();
 	            panel1.setLayout(new BoxLayout(panel1, BoxLayout.Y_AXIS));
 	            panel1.setOpaque(true);
@@ -456,7 +464,7 @@ public class WelcomePage {
 			}
 		});
 		mainPanel.add(viewButton);
-		
+
 		JButton exportButton = new JButton("");
 		sl_mainPanel.putConstraint(SpringLayout.NORTH, exportButton, 131, SpringLayout.NORTH, mainPanel);
 		sl_mainPanel.putConstraint(SpringLayout.EAST, exportButton, -170, SpringLayout.EAST, mainPanel);
@@ -484,9 +492,9 @@ public class WelcomePage {
 			float y = pageHeight - textHeight - 50;
 			contentStream.newLineAtOffset(30, 700);
 			int lineCount = 0;
-			for (int i = 1 ; i < items.size() + 1 ; i++) {	
+			for (int i = 1 ; i < items.size() + 1 ; i++) {
 				String[] lines = WordUtils.wrap(i + ". " + items.get(i).toString(), (int) y / 12).split("\\r?\\n");
-				for (int j = 0 ; j < lines.length; j++) {
+				for (String line : lines) {
 					if (lineCount >= 48) {
 	                    contentStream.endText();
 	                    contentStream.close();
@@ -501,7 +509,7 @@ public class WelcomePage {
 	                    lineCount = 0;
 	                }
 	                lineCount++;
-					contentStream.showText(lines[j]);
+					contentStream.showText(line);
 					contentStream.moveTextPositionByAmount(0, - 12 * 1.2f);
 				}
 			}
@@ -512,14 +520,18 @@ public class WelcomePage {
 			}
 			document.save(f);
 			document.close();
-			
+			JFrame frame1 = new JFrame("Export status");
+			frame1.setPreferredSize(new Dimension(550, 100));
+			launchFrame(frame1, "Exported correctly. Check your Documents folder for a file named MostRecentReport.pdf");
 			} catch (IOException e1) {
-				// TODO Auto-generated catch block
+				JFrame frame1 = new JFrame("Export status");
+				frame1.setPreferredSize(new Dimension(550, 100));
+				launchFrame(frame1, "Exported failed. Did you forget to login again after adding items?");
 				e1.printStackTrace();
 			}
 		});
 		mainPanel.add(exportButton);
-		
+
 		JButton searchButton = new JButton("");
 		sl_mainPanel.putConstraint(SpringLayout.WEST, exportButton, 168, SpringLayout.EAST, searchButton);
 		sl_mainPanel.putConstraint(SpringLayout.EAST, viewButton, -168, SpringLayout.WEST, searchButton);
@@ -535,7 +547,7 @@ public class WelcomePage {
 		searchButton.addActionListener(e -> {
 			JFrame frame1 = new JFrame("Search...");
 		    frame1.setIconImage(Toolkit.getDefaultToolkit().getImage(LoginForm.class.getResource("/com/irrelevxnce/img/EuTech_logo.png")));
-		    frame1.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		    frame1.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		    JPanel panel1 = new JPanel();
 		    panel1.setLayout(new BoxLayout(panel1, BoxLayout.Y_AXIS));
 		    panel1.setOpaque(true);
@@ -549,16 +561,16 @@ public class WelcomePage {
 	        frame1.getRootPane().setDefaultButton(button);
 	        button.addActionListener(d -> {
 	        	String textBox = name.getText();
-	        	Boolean isID = false;
+	        	boolean isID = false;
 	        	int id = 0;
 	        	try {
 	        		id = Integer.parseInt(textBox);
 	        		isID = true;
 	        	} catch (NumberFormatException z){
-	        		
+
 	        	}
 		    	JFrame frame2 = new JFrame("Search Results");
-				frame1.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				frame1.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 				JPanel panel2 = new JPanel();
 		        panel1.setLayout(new BoxLayout(panel1, BoxLayout.Y_AXIS));
 		        panel1.setOpaque(true);
@@ -586,7 +598,7 @@ public class WelcomePage {
 		        frame1.pack();
 		        frame1.setVisible(true);
 		        frame1.setResizable(false);
-			}); 
+			});
 		    inputpanel.add(button);
 			panel1.add(inputpanel);
 	        frame1.getContentPane().add(BorderLayout.CENTER, panel1);
@@ -597,7 +609,7 @@ public class WelcomePage {
 	        name.requestFocus();
 		});
 		mainPanel.add(searchButton);
-		
+
 		JLabel addLabel = new JLabel("Add item");
 		sl_mainPanel.putConstraint(SpringLayout.NORTH, addItemButton, 6, SpringLayout.SOUTH, addLabel);
 		sl_mainPanel.putConstraint(SpringLayout.SOUTH, addItemButton, 56, SpringLayout.SOUTH, addLabel);
@@ -609,7 +621,7 @@ public class WelcomePage {
 		addLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		addLabel.setLabelFor(addItemButton);
 		mainPanel.add(addLabel);
-		
+
 		JLabel editLabel = new JLabel("Edit item");
 		sl_mainPanel.putConstraint(SpringLayout.NORTH, editItemButton, 6, SpringLayout.SOUTH, editLabel);
 		sl_mainPanel.putConstraint(SpringLayout.SOUTH, editItemButton, 56, SpringLayout.SOUTH, editLabel);
@@ -622,7 +634,7 @@ public class WelcomePage {
 		editLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		editLabel.setLabelFor(editItemButton);
 		mainPanel.add(editLabel);
-		
+
 		JLabel deleteLabel = new JLabel("Delete item");
 		sl_mainPanel.putConstraint(SpringLayout.NORTH, deleteButton, 6, SpringLayout.SOUTH, deleteLabel);
 		sl_mainPanel.putConstraint(SpringLayout.SOUTH, deleteButton, 56, SpringLayout.SOUTH, deleteLabel);
@@ -635,7 +647,7 @@ public class WelcomePage {
 		sl_mainPanel.putConstraint(SpringLayout.NORTH, deleteLabel, 0, SpringLayout.NORTH, addLabel);
 		deleteLabel.setLabelFor(deleteButton);
 		mainPanel.add(deleteLabel);
-		
+
 		JLabel viewLabel = new JLabel("View item list");
 		sl_mainPanel.putConstraint(SpringLayout.WEST, addLabel, 0, SpringLayout.WEST, viewLabel);
 		sl_mainPanel.putConstraint(SpringLayout.EAST, addLabel, 0, SpringLayout.EAST, viewLabel);
@@ -646,7 +658,7 @@ public class WelcomePage {
 		viewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		viewLabel.setLabelFor(viewButton);
 		mainPanel.add(viewLabel);
-		
+
 		JLabel exportLabel = new JLabel("Export");
 		sl_mainPanel.putConstraint(SpringLayout.EAST, exportLabel, -170, SpringLayout.EAST, mainPanel);
 		sl_mainPanel.putConstraint(SpringLayout.WEST, deleteLabel, 0, SpringLayout.WEST, exportLabel);
@@ -658,7 +670,7 @@ public class WelcomePage {
 		exportLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		exportLabel.setLabelFor(exportButton);
 		mainPanel.add(exportLabel);
-		
+
 		JLabel searchLabel = new JLabel("Search");
 		sl_mainPanel.putConstraint(SpringLayout.EAST, searchLabel, -450, SpringLayout.EAST, mainPanel);
 		sl_mainPanel.putConstraint(SpringLayout.WEST, exportLabel, 168, SpringLayout.EAST, searchLabel);
@@ -673,7 +685,7 @@ public class WelcomePage {
 		searchLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		searchLabel.setLabelFor(searchButton);
 		mainPanel.add(searchLabel);
-		
+
 		JLabel regularLabel = new JLabel("Regular user options:");
 		sl_mainPanel.putConstraint(SpringLayout.NORTH, regularLabel, 24, SpringLayout.NORTH, mainPanel);
 		sl_mainPanel.putConstraint(SpringLayout.WEST, regularLabel, 228, SpringLayout.EAST, menuButton);
@@ -683,14 +695,14 @@ public class WelcomePage {
 		regularLabel.setForeground(new Color(255, 255, 255));
 		regularLabel.setFont(new Font("Tahoma", Font.PLAIN, 32));
 		mainPanel.add(regularLabel);
-		
+
 		JLabel label = new JLabel("New label");
 		sl_mainPanel.putConstraint(SpringLayout.NORTH, label, 178, SpringLayout.SOUTH, regularLabel);
 		sl_mainPanel.putConstraint(SpringLayout.WEST, label, 315, SpringLayout.WEST, mainPanel);
 		sl_mainPanel.putConstraint(SpringLayout.SOUTH, label, 181, SpringLayout.SOUTH, regularLabel);
 		sl_mainPanel.putConstraint(SpringLayout.EAST, label, 315, SpringLayout.WEST, mainPanel);
 		mainPanel.add(label);
-		
+
 		JLabel adminLabel = new JLabel("Administrator options:");
 		sl_mainPanel.putConstraint(SpringLayout.NORTH, adminLabel, 38, SpringLayout.SOUTH, label);
 		sl_mainPanel.putConstraint(SpringLayout.SOUTH, adminLabel, -59, SpringLayout.NORTH, editLabel);
@@ -700,7 +712,7 @@ public class WelcomePage {
 		sl_mainPanel.putConstraint(SpringLayout.WEST, adminLabel, 0, SpringLayout.WEST, regularLabel);
 		sl_mainPanel.putConstraint(SpringLayout.EAST, adminLabel, 0, SpringLayout.EAST, regularLabel);
 		mainPanel.add(adminLabel);
-		
+
 		JButton closeButton = new JButton("");
 		sl_sidePanel.putConstraint(SpringLayout.SOUTH, closeButton, 60, SpringLayout.NORTH, sidePanel);
 		sl_sidePanel.putConstraint(SpringLayout.EAST, closeButton, 60, SpringLayout.WEST, sidePanel);
@@ -719,7 +731,7 @@ public class WelcomePage {
 			menuButton.setVisible(true);
 		});
 		sidePanel.add(closeButton);
-		
+
 		JLabel welcomeLabel = new JLabel("Welcome back,");
 		welcomeLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		welcomeLabel.setForeground(new Color(255, 255, 255));
@@ -728,7 +740,7 @@ public class WelcomePage {
 		sl_sidePanel.putConstraint(SpringLayout.WEST, welcomeLabel, 10, SpringLayout.WEST, sidePanel);
 		sl_sidePanel.putConstraint(SpringLayout.SOUTH, welcomeLabel, 35, SpringLayout.SOUTH, closeButton);
 		sidePanel.add(welcomeLabel);
-		
+
 		JLabel nameLabel = new JLabel("username");
 		sl_sidePanel.putConstraint(SpringLayout.EAST, welcomeLabel, 0, SpringLayout.EAST, nameLabel);
 		sl_sidePanel.putConstraint(SpringLayout.WEST, nameLabel, 0, SpringLayout.WEST, closeButton);
@@ -741,7 +753,7 @@ public class WelcomePage {
 		nameLabel.setForeground(new Color(255, 255, 255));
 		nameLabel.setFont(new Font("Tahoma", Font.PLAIN, 32));
 		sidePanel.add(nameLabel);
-		
+
 		JButton addButton = new JButton("");
 		sl_sidePanel.putConstraint(SpringLayout.NORTH, addButton, -89, SpringLayout.SOUTH, sidePanel);
 		sl_sidePanel.putConstraint(SpringLayout.WEST, addButton, 0, SpringLayout.WEST, welcomeLabel);
@@ -760,7 +772,7 @@ public class WelcomePage {
 					System.out.println("seks");
 					JFrame frame1 = new JFrame("Add User");
 				    frame1.setIconImage(Toolkit.getDefaultToolkit().getImage(LoginForm.class.getResource("/com/irrelevxnce/img/EuTech_logo.png")));
-				    frame1.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				    frame1.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 				    JPanel panel1 = new JPanel();
 				    panel1.setLayout(new BoxLayout(panel1, BoxLayout.Y_AXIS));
 				    panel1.setOpaque(true);
@@ -772,15 +784,15 @@ public class WelcomePage {
 				    JLabel usernameLabel = new JLabel("Username: ");
 			        inputpanel.add(usernameLabel);
 			        inputpanel.add(name);
-			        
+
 			        JLabel passwordLabel = new JLabel("Password: ");
 			        inputpanel.add(passwordLabel);
 			        inputpanel.add(pass);
-			        
+
 			        JLabel adminAccLabel = new JLabel("Administrator account:");
 			        inputpanel.add(adminAccLabel);
 			        inputpanel.add(isAdmin);
-			        
+
 				    JButton button = new JButton("Enter");
 				    frame1.getRootPane().setDefaultButton(button);
 				    button.addActionListener(d -> {
@@ -801,7 +813,7 @@ public class WelcomePage {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
 						}
-					}); 
+					});
 				    inputpanel.add(button);
 					panel1.add(inputpanel);
 			        frame1.getContentPane().add(BorderLayout.CENTER, panel1);
@@ -823,12 +835,12 @@ public class WelcomePage {
 				e1.printStackTrace();
 			}
 			});
-	        
-	        
+
+
 		addButton.setContentAreaFilled(false);
         sidePanel.add(addButton);
-		
-		
+
+
 		JLabel statusLabel = new JLabel("Administrator status: ");
 		statusLabel.setForeground(new Color(255, 255, 255));
 		sl_sidePanel.putConstraint(SpringLayout.NORTH, statusLabel, 6, SpringLayout.SOUTH, nameLabel);
@@ -838,7 +850,7 @@ public class WelcomePage {
 		statusLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		statusLabel.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		sidePanel.add(statusLabel);
-		
+
 		JLabel status = new JLabel(edc.getAdminStatus(username).toString());
 		status.setHorizontalAlignment(SwingConstants.CENTER);
 		status.setForeground(new Color(255, 255, 255));
@@ -848,7 +860,7 @@ public class WelcomePage {
 		sl_sidePanel.putConstraint(SpringLayout.SOUTH, status, 56, SpringLayout.SOUTH, statusLabel);
 		sl_sidePanel.putConstraint(SpringLayout.EAST, status, 259, SpringLayout.WEST, sidePanel);
 		sidePanel.add(status);
-		
+
 		JLabel createLabel1 = new JLabel("Use the button below to");
 		sl_sidePanel.putConstraint(SpringLayout.WEST, createLabel1, 0, SpringLayout.WEST, closeButton);
 		createLabel1.setVerticalAlignment(SwingConstants.BOTTOM);
@@ -860,7 +872,7 @@ public class WelcomePage {
 		createLabel1.setBackground(new Color(255, 255, 255));
 		createLabel1.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		sidePanel.add(createLabel1);
-		
+
 		JLabel createLabel2 = new JLabel("create a new user.");
 		sl_sidePanel.putConstraint(SpringLayout.NORTH, createLabel2, 6, SpringLayout.SOUTH, createLabel1);
 		sl_sidePanel.putConstraint(SpringLayout.WEST, createLabel2, 0, SpringLayout.WEST, closeButton);
@@ -871,10 +883,10 @@ public class WelcomePage {
 		createLabel2.setHorizontalAlignment(SwingConstants.CENTER);
 		createLabel2.setForeground(new Color(255, 255, 255));
 		sidePanel.add(createLabel2);
-	
+
 	}
-	
-	public void launchFrame (JFrame frame1, String textToShow) {
+
+	public static void launchFrame (JFrame frame1, String textToShow) {
 		frame1.setIconImage(Toolkit.getDefaultToolkit().getImage(LoginForm.class.getResource("/com/irrelevxnce/img/EuTech_logo.png")));
         frame1.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         try {
@@ -894,11 +906,11 @@ public class WelcomePage {
         frame1.setVisible(true);
         frame1.setResizable(false);
 	}
-	
+
 	private static Component createVerticalStrut(int height) {
         return Box.createRigidArea(new Dimension(0, height));
     }
-		
+
 	private static Component createHorizontalStrut(int width) {
         return Box.createRigidArea(new Dimension(width, 0));
     }

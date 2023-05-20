@@ -2,15 +2,10 @@ package com.irrelevxnce.LoginSystem;
 
 import java.awt.Component;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
-import java.awt.Graphics2D;
-import javax.swing.JButton;
-import javax.swing.JPanel;
 
 public class NoScalingIcon implements Icon{
     private Icon icon;
@@ -20,17 +15,20 @@ public class NoScalingIcon implements Icon{
         this.icon = icon;
     }
 
-    public int getIconWidth()
+    @Override
+	public int getIconWidth()
     {
         return icon.getIconWidth();
     }
 
-    public int getIconHeight()
+    @Override
+	public int getIconHeight()
     {
         return icon.getIconHeight();
     }
 
-    public void paintIcon(Component c, Graphics g, int x, int y)
+    @Override
+	public void paintIcon(Component c, Graphics g, int x, int y)
     {
         Graphics2D g2d = (Graphics2D)g.create();
 

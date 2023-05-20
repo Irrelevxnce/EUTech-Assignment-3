@@ -10,6 +10,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.WindowConstants;
 
 public class test {
 
@@ -20,6 +21,7 @@ public class test {
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				try {
 					test window = new test();
@@ -43,7 +45,7 @@ public class test {
 	 */
 	private void initialize() {
 		JFrame frame1 = new JFrame("View Inventory");
-		frame1.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		frame1.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		JPanel panel1 = new JPanel();
         panel1.setLayout(new BoxLayout(panel1, BoxLayout.Y_AXIS));
         panel1.setOpaque(true);

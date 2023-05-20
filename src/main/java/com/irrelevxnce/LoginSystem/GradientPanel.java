@@ -1,18 +1,18 @@
 package com.irrelevxnce.LoginSystem;
 
 import java.awt.Color;
+import java.awt.GradientPaint;
 import java.awt.Graphics;
-
-import javax.swing.JPanel;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
-import java.awt.GradientPaint;
+
+import javax.swing.JPanel;
 
 public class GradientPanel extends JPanel{
-	
+
 	Color colorTop;
 	Color colorBottom;
-	
+
 	public GradientPanel(Color color1, Color color2) {
 		this.colorTop = color1;
 		this.colorBottom = color2;

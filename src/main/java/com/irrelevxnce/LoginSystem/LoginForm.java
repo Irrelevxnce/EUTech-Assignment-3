@@ -10,15 +10,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.math.BigInteger;
-import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.Base64;
 import java.util.HashMap;
-import org.bouncycastle.*;
-import org.bouncycastle.crypto.generators.BCrypt;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -31,6 +27,8 @@ import javax.swing.SpringLayout;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
+
+import org.bouncycastle.crypto.generators.BCrypt;
 
 import com.irrelevxnce.WelcomePage;
 

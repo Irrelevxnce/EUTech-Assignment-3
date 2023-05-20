@@ -6,9 +6,9 @@ import java.util.HashMap;
 
 public class UIDSecrets {
 
-	HashMap<String, String> loginInfo = new HashMap<String, String>();
+	HashMap<String, String> loginInfo = new HashMap<>();
 	EmbeddedDatabaseConnector edc = new EmbeddedDatabaseConnector();
-	
+
 	public UIDSecrets() throws NoSuchAlgorithmException {
 		try {
 			loginInfo = edc.connect(false, true, false, "", "", false, "0", "", "0");
@@ -17,7 +17,7 @@ public class UIDSecrets {
 			e.printStackTrace();
 		}
 	}
-	
+
 	protected HashMap<String, String> getLoginInfo() {
 		return loginInfo;
 	}
