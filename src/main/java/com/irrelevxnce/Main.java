@@ -9,7 +9,5 @@ public class Main {
     public static void main(String[] args) throws NoSuchAlgorithmException {
     	UIDSecrets uidss = new UIDSecrets();
     	LoginForm login = new LoginForm(uidss.getLoginInfo());
-    	login.main(args);
-    	
     }
 }

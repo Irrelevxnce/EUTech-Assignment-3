@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -16,8 +17,10 @@ import java.sql.SQLException;
 import java.util.Base64;
 import java.util.HashMap;
 
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -30,6 +33,7 @@ import javax.swing.WindowConstants;
 
 import org.bouncycastle.crypto.generators.BCrypt;
 
+import com.irrelevxnce.EmbeddedDatabaseConnector;
 import com.irrelevxnce.WelcomePage;
 
 public class LoginForm implements ActionListener{
@@ -39,6 +43,10 @@ public class LoginForm implements ActionListener{
 	private JTextField textField;
 	private JPasswordField passwordField;
 	MessageDigest md;
+	String UID;
+	String secretToParse;
+	Boolean isAdministrator;
+	EmbeddedDatabaseConnector edc = new EmbeddedDatabaseConnector();
 
 
 	/**
@@ -69,107 +77,173 @@ public class LoginForm implements ActionListener{
 	/**
 	 * Initialize the contents of the frame.
 	 */
+	@SuppressWarnings("deprecation")
 	private void initialize() {
-		frmLogin = new JFrame();
-		frmLogin.setIconImage(Toolkit.getDefaultToolkit().getImage(LoginForm.class.getResource("/com/irrelevxnce/img/EuTech_logo.png")));
-		frmLogin.setTitle("Login");
-		frmLogin.setBounds(100, 100, 700, 500);
-		frmLogin.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		SpringLayout springLayout = new SpringLayout();
-        frmLogin.getContentPane().setLayout(springLayout);
-        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-        frmLogin.getContentPane().setLocation(dim.width / 2 - frmLogin.getContentPane().getSize().width / 2, dim.height / 2 - frmLogin.getContentPane().getSize().height / 2);
-		JPanel outerPanel = new GradientPanel(new Color(65, 181, 144), new Color(90, 47, 150));
-		springLayout.putConstraint(SpringLayout.NORTH, outerPanel, -463, SpringLayout.SOUTH, frmLogin.getContentPane());
-		springLayout.putConstraint(SpringLayout.WEST, outerPanel, -686, SpringLayout.EAST, frmLogin.getContentPane());
-		springLayout.putConstraint(SpringLayout.SOUTH, outerPanel, 0, SpringLayout.SOUTH, frmLogin.getContentPane());
-		springLayout.putConstraint(SpringLayout.EAST, outerPanel, 0, SpringLayout.EAST, frmLogin.getContentPane());
-		frmLogin.getContentPane().add(outerPanel, BorderLayout.CENTER);
-		SpringLayout sl_outerPanel = new SpringLayout();
-		outerPanel.setLayout(sl_outerPanel);
+		if (!loginInfoL.isEmpty()) {
+			frmLogin = new JFrame();
+			frmLogin.setIconImage(Toolkit.getDefaultToolkit().getImage(LoginForm.class.getResource("/com/irrelevxnce/img/EuTech_logo.png")));
+			frmLogin.setTitle("Login");
+			frmLogin.setBounds(100, 100, 700, 500);
+			frmLogin.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+			SpringLayout springLayout = new SpringLayout();
+	        frmLogin.getContentPane().setLayout(springLayout);
+	        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+	        frmLogin.getContentPane().setLocation(dim.width / 2 - frmLogin.getContentPane().getSize().width / 2, dim.height / 2 - frmLogin.getContentPane().getSize().height / 2);
+			JPanel outerPanel = new GradientPanel(new Color(65, 181, 144), new Color(90, 47, 150));
+			springLayout.putConstraint(SpringLayout.NORTH, outerPanel, -463, SpringLayout.SOUTH, frmLogin.getContentPane());
+			springLayout.putConstraint(SpringLayout.WEST, outerPanel, -686, SpringLayout.EAST, frmLogin.getContentPane());
+			springLayout.putConstraint(SpringLayout.SOUTH, outerPanel, 0, SpringLayout.SOUTH, frmLogin.getContentPane());
+			springLayout.putConstraint(SpringLayout.EAST, outerPanel, 0, SpringLayout.EAST, frmLogin.getContentPane());
+			frmLogin.getContentPane().add(outerPanel, BorderLayout.CENTER);
+			SpringLayout sl_outerPanel = new SpringLayout();
+			outerPanel.setLayout(sl_outerPanel);
 
-		JPanel innerPanel = new JPanel();
-		innerPanel.setOpaque(false);
-		innerPanel.setFocusable(false);
-		innerPanel.setForeground(new Color(0, 0, 0));
-		sl_outerPanel.putConstraint(SpringLayout.NORTH, innerPanel, 42, SpringLayout.NORTH, outerPanel);
-		sl_outerPanel.putConstraint(SpringLayout.WEST, innerPanel, 42, SpringLayout.WEST, outerPanel);
-		sl_outerPanel.putConstraint(SpringLayout.SOUTH, innerPanel, -42, SpringLayout.SOUTH, outerPanel);
-		sl_outerPanel.putConstraint(SpringLayout.EAST, innerPanel, -42, SpringLayout.EAST, outerPanel);
-		innerPanel.setPreferredSize(new Dimension(600, 400));
-		innerPanel.setName("innerPanel");
-		springLayout.putConstraint(SpringLayout.SOUTH, innerPanel, 0, SpringLayout.SOUTH, frmLogin.getContentPane());
-		innerPanel.setBorder(new RoundedBorder(new Color(1f,1f,1f,.5f ), 200, 40, true));
-		innerPanel.setBackground(new Color(0f, 0f, 0f, 0f));
-		outerPanel.add(innerPanel);
+			JPanel innerPanel = new JPanel();
+			innerPanel.setOpaque(false);
+			innerPanel.setFocusable(false);
+			innerPanel.setForeground(new Color(0, 0, 0));
+			sl_outerPanel.putConstraint(SpringLayout.NORTH, innerPanel, 42, SpringLayout.NORTH, outerPanel);
+			sl_outerPanel.putConstraint(SpringLayout.WEST, innerPanel, 42, SpringLayout.WEST, outerPanel);
+			sl_outerPanel.putConstraint(SpringLayout.SOUTH, innerPanel, -42, SpringLayout.SOUTH, outerPanel);
+			sl_outerPanel.putConstraint(SpringLayout.EAST, innerPanel, -42, SpringLayout.EAST, outerPanel);
+			innerPanel.setPreferredSize(new Dimension(600, 400));
+			innerPanel.setName("innerPanel");
+			springLayout.putConstraint(SpringLayout.SOUTH, innerPanel, 0, SpringLayout.SOUTH, frmLogin.getContentPane());
+			innerPanel.setBorder(new RoundedBorder(new Color(1f,1f,1f,.5f ), 200, 40, true));
+			innerPanel.setBackground(new Color(0f, 0f, 0f, 0f));
+			outerPanel.add(innerPanel);
 
-		SpringLayout sl_innerPanel = new SpringLayout();
-		innerPanel.setLayout(sl_innerPanel);
+			SpringLayout sl_innerPanel = new SpringLayout();
+			innerPanel.setLayout(sl_innerPanel);
 
-		JLabel usernameLabel = new JLabel("Username:");
-		usernameLabel.setBackground(new Color(0, 0, 0));
-		sl_innerPanel.putConstraint(SpringLayout.NORTH, usernameLabel, -150, SpringLayout.NORTH, innerPanel);
-		sl_innerPanel.putConstraint(SpringLayout.WEST, usernameLabel, -150, SpringLayout.WEST, innerPanel);
-		sl_innerPanel.putConstraint(SpringLayout.EAST, usernameLabel, -180, SpringLayout.EAST, innerPanel);
-		usernameLabel.setForeground(new Color(59, 59, 59));
-		usernameLabel.setFont(new Font("Leelawadee UI", Font.PLAIN, 27));
-		innerPanel.add(usernameLabel);
+			JLabel usernameLabel = new JLabel("Username:");
+			usernameLabel.setBackground(new Color(0, 0, 0));
+			sl_innerPanel.putConstraint(SpringLayout.NORTH, usernameLabel, -150, SpringLayout.NORTH, innerPanel);
+			sl_innerPanel.putConstraint(SpringLayout.WEST, usernameLabel, -150, SpringLayout.WEST, innerPanel);
+			sl_innerPanel.putConstraint(SpringLayout.EAST, usernameLabel, -180, SpringLayout.EAST, innerPanel);
+			usernameLabel.setForeground(new Color(59, 59, 59));
+			usernameLabel.setFont(new Font("Leelawadee UI", Font.PLAIN, 27));
+			innerPanel.add(usernameLabel);
 
-		textField = new JTextField();
-		textField.setBorder(null);
-		textField.setFont(new Font("Leelawadee UI Semilight", Font.PLAIN, 20));
-		sl_innerPanel.putConstraint(SpringLayout.NORTH, textField, 30, SpringLayout.SOUTH, usernameLabel);
-		sl_innerPanel.putConstraint(SpringLayout.WEST, textField, 0, SpringLayout.WEST, usernameLabel);
-		sl_innerPanel.putConstraint(SpringLayout.SOUTH, textField, -10, SpringLayout.SOUTH, innerPanel);
-		sl_innerPanel.putConstraint(SpringLayout.EAST, textField, 0, SpringLayout.EAST, innerPanel);
-		Color c = new Color(255, 255, 255);
-		textField.setBackground(c);
-		textField.setColumns(10);
-		innerPanel.add(textField);
+			textField = new JTextField();
+			textField.setBorder(null);
+			textField.setFont(new Font("Leelawadee UI Semilight", Font.PLAIN, 20));
+			sl_innerPanel.putConstraint(SpringLayout.NORTH, textField, 30, SpringLayout.SOUTH, usernameLabel);
+			sl_innerPanel.putConstraint(SpringLayout.WEST, textField, 0, SpringLayout.WEST, usernameLabel);
+			sl_innerPanel.putConstraint(SpringLayout.SOUTH, textField, -10, SpringLayout.SOUTH, innerPanel);
+			sl_innerPanel.putConstraint(SpringLayout.EAST, textField, 0, SpringLayout.EAST, innerPanel);
+			Color c = new Color(255, 255, 255);
+			textField.setBackground(c);
+			textField.setColumns(10);
+			innerPanel.add(textField);
 
-		JLabel passwordLabel = new JLabel("Password:");
-		passwordLabel.setForeground(new Color(59, 59, 59));
-		passwordLabel.setFont(new Font("Leelawadee UI", Font.PLAIN, 27));
-		sl_innerPanel.putConstraint(SpringLayout.NORTH, passwordLabel, 100, SpringLayout.NORTH, textField);
-		sl_innerPanel.putConstraint(SpringLayout.WEST, passwordLabel, -150, SpringLayout.WEST, innerPanel);
-		innerPanel.add(passwordLabel);
+			JLabel passwordLabel = new JLabel("Password:");
+			passwordLabel.setForeground(new Color(59, 59, 59));
+			passwordLabel.setFont(new Font("Leelawadee UI", Font.PLAIN, 27));
+			sl_innerPanel.putConstraint(SpringLayout.NORTH, passwordLabel, 100, SpringLayout.NORTH, textField);
+			sl_innerPanel.putConstraint(SpringLayout.WEST, passwordLabel, -150, SpringLayout.WEST, innerPanel);
+			innerPanel.add(passwordLabel);
 
-		passwordField = new JPasswordField();
-		passwordField.setFont(new Font("Leelawadee UI Semilight", Font.PLAIN, 20));
-		sl_innerPanel.putConstraint(SpringLayout.SOUTH, passwordField, 155, SpringLayout.SOUTH, innerPanel);
-		passwordField.setBorder(null);
-		passwordField.setBackground(c);
-		sl_innerPanel.putConstraint(SpringLayout.NORTH, passwordField, 30, SpringLayout.SOUTH, passwordLabel);
-		sl_innerPanel.putConstraint(SpringLayout.WEST, passwordField, 0, SpringLayout.WEST, passwordLabel);
-		sl_innerPanel.putConstraint(SpringLayout.EAST, passwordField, 0, SpringLayout.EAST, innerPanel);
-		innerPanel.add(passwordField);
+			passwordField = new JPasswordField();
+			passwordField.setFont(new Font("Leelawadee UI Semilight", Font.PLAIN, 20));
+			sl_innerPanel.putConstraint(SpringLayout.SOUTH, passwordField, 155, SpringLayout.SOUTH, innerPanel);
+			passwordField.setBorder(null);
+			passwordField.setBackground(c);
+			sl_innerPanel.putConstraint(SpringLayout.NORTH, passwordField, 30, SpringLayout.SOUTH, passwordLabel);
+			sl_innerPanel.putConstraint(SpringLayout.WEST, passwordField, 0, SpringLayout.WEST, passwordLabel);
+			sl_innerPanel.putConstraint(SpringLayout.EAST, passwordField, 0, SpringLayout.EAST, innerPanel);
+			innerPanel.add(passwordField);
 
-		NoScalingIcon img = new NoScalingIcon(new ImageIcon(LoginForm.class.getResource("/com/irrelevxnce/img/EuTech_logo_s.png")));
-		JLabel image = new JLabel(img);
-		sl_innerPanel.putConstraint(SpringLayout.NORTH, image, -105, SpringLayout.NORTH, innerPanel);
-		sl_innerPanel.putConstraint(SpringLayout.WEST, image, 200, SpringLayout.EAST, usernameLabel);
-		sl_innerPanel.putConstraint(SpringLayout.SOUTH, image, 80, SpringLayout.SOUTH, innerPanel);
-		sl_innerPanel.putConstraint(SpringLayout.EAST, image, 160, SpringLayout.EAST, innerPanel);
-		image.setMinimumSize(new Dimension(50, 80));
-		image.setBackground(new Color(1f,1f,1f,0f ));
-		image.setOpaque(true);
-		image.setSize(image.getIcon().getIconWidth(), image.getIcon().getIconHeight());
-		innerPanel.add(image);
+			NoScalingIcon img = new NoScalingIcon(new ImageIcon(LoginForm.class.getResource("/com/irrelevxnce/img/EuTech_logo_s.png")));
+			JLabel image = new JLabel(img);
+			sl_innerPanel.putConstraint(SpringLayout.NORTH, image, -105, SpringLayout.NORTH, innerPanel);
+			sl_innerPanel.putConstraint(SpringLayout.WEST, image, 200, SpringLayout.EAST, usernameLabel);
+			sl_innerPanel.putConstraint(SpringLayout.SOUTH, image, 80, SpringLayout.SOUTH, innerPanel);
+			sl_innerPanel.putConstraint(SpringLayout.EAST, image, 160, SpringLayout.EAST, innerPanel);
+			image.setMinimumSize(new Dimension(50, 80));
+			image.setBackground(new Color(1f,1f,1f,0f ));
+			image.setOpaque(true);
+			image.setSize(image.getIcon().getIconWidth(), image.getIcon().getIconHeight());
+			innerPanel.add(image);
 
-		JButton btnNewButton = new JButton("");
-		sl_innerPanel.putConstraint(SpringLayout.EAST, btnNewButton, -30, SpringLayout.EAST, image);
-		sl_innerPanel.putConstraint(SpringLayout.NORTH, btnNewButton, 0, SpringLayout.NORTH, passwordField);
-		sl_innerPanel.putConstraint(SpringLayout.WEST, btnNewButton, 50, SpringLayout.EAST, passwordField);
-		sl_innerPanel.putConstraint(SpringLayout.SOUTH, btnNewButton, 155, SpringLayout.SOUTH, innerPanel);
-		NoScalingIcon enterIcon = new NoScalingIcon(new ImageIcon(LoginForm.class.getResource("/com/irrelevxnce/img/arrow_right_alt_FILL0_wght400_GRAD0_opsz48.png")));
-		btnNewButton.setIcon(enterIcon);
-		btnNewButton.setBorder(new RoundedBorder(new Color(1f,1f,1f,1f ), 3, 50, true));
-		btnNewButton.setBackground(new Color(230, 92, 115));
-		btnNewButton.setFocusable(false);
-		btnNewButton.setOpaque(false);
-		btnNewButton.setContentAreaFilled(false);
-		btnNewButton.addActionListener(this);
-		innerPanel.add(btnNewButton);
+			JButton btnNewButton = new JButton("");
+			sl_innerPanel.putConstraint(SpringLayout.EAST, btnNewButton, -30, SpringLayout.EAST, image);
+			sl_innerPanel.putConstraint(SpringLayout.NORTH, btnNewButton, 0, SpringLayout.NORTH, passwordField);
+			sl_innerPanel.putConstraint(SpringLayout.WEST, btnNewButton, 50, SpringLayout.EAST, passwordField);
+			sl_innerPanel.putConstraint(SpringLayout.SOUTH, btnNewButton, 155, SpringLayout.SOUTH, innerPanel);
+			NoScalingIcon enterIcon = new NoScalingIcon(new ImageIcon(LoginForm.class.getResource("/com/irrelevxnce/img/arrow_right_alt_FILL0_wght400_GRAD0_opsz48.png")));
+			btnNewButton.setIcon(enterIcon);
+			btnNewButton.setBorder(new RoundedBorder(new Color(1f,1f,1f,1f ), 3, 50, true));
+			btnNewButton.setBackground(new Color(230, 92, 115));
+			btnNewButton.setFocusable(false);
+			btnNewButton.setOpaque(false);
+			btnNewButton.setContentAreaFilled(false);
+			btnNewButton.addActionListener(this);
+			innerPanel.add(btnNewButton);
+			frmLogin.setVisible(true);
+		} else {
+			JFrame frame1 = new JFrame("Initial Setup. (THIS WILL ONLY RUN IF YOU HAVE NOT CREATED A USER YET)");
+		    frame1.setIconImage(Toolkit.getDefaultToolkit().getImage(LoginForm.class.getResource("/com/irrelevxnce/img/EuTech_logo.png")));
+		    frame1.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		    JPanel panel1 = new JPanel();
+		    panel1.setLayout(new BoxLayout(panel1, BoxLayout.Y_AXIS));
+		    panel1.setOpaque(true);
+		    JPanel inputpanel = new JPanel();
+		    inputpanel.setLayout(new FlowLayout());
+		    JTextField name = new JTextField(15);
+		    JPasswordField pass = new JPasswordField(20);
+		    JCheckBox isAdmin = new JCheckBox();
+		    isAdmin.setSelected(true);
+		    isAdmin.setFocusable(false);
+		    isAdmin.setEnabled(false);
+		    JLabel usernameLabel = new JLabel("Username: ");
+	        inputpanel.add(usernameLabel);
+	        inputpanel.add(name);
+
+	        JLabel passwordLabel = new JLabel("Password: ");
+	        inputpanel.add(passwordLabel);
+	        inputpanel.add(pass);
+
+	        JLabel adminAccLabel = new JLabel("Administrator account:");
+	        inputpanel.add(adminAccLabel);
+	        inputpanel.add(isAdmin);
+
+		    JButton button = new JButton("Enter");
+		    frame1.getRootPane().setDefaultButton(button);
+		    button.addActionListener(d -> {
+		        UID = name.getText();
+		        secretToParse = String.valueOf(pass.getPassword());
+				try {
+					String salt = "9Zf8RiQwOMdND9rK";
+		    		byte[] encrypted = BCrypt.generate(secretToParse.getBytes(), salt.getBytes(), 4);
+		    		String secret = Base64.getEncoder().encodeToString(encrypted);
+					edc.connect(true, false, true, UID, secret, true, "0", "", "0");
+					frame1.dispose();
+				} catch (NoSuchAlgorithmException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+					JFrame frame2 = new JFrame("asd");
+					frame2.setPreferredSize(new Dimension(450, 100));
+		            launchFrame(frame2, "asd");
+					System.out.println("Error generating hash.");
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					JFrame frame2 = new JFrame("asd2");
+					frame2.setPreferredSize(new Dimension(450, 100));
+					String toShow = e1.getMessage();
+		            launchFrame(frame2, toShow);
+					e1.printStackTrace();
+				}
+			});
+		    inputpanel.add(button);
+			panel1.add(inputpanel);
+	        frame1.getContentPane().add(BorderLayout.CENTER, panel1);
+	        frame1.pack();
+	        frame1.setLocationByPlatform(true);
+	        frame1.setVisible(true);
+	        frame1.setResizable(false);
+	        name.requestFocus();
+		}
 	}
 
 	public void launchFrame (JFrame frame1, String textToShow) {
@@ -203,7 +277,6 @@ public class LoginForm implements ActionListener{
 			String encodedHash = Base64.getEncoder().encodeToString(encrypted);
 			System.out.println(encodedHash);
 			if (loginInfoL.get(UID).contains(encodedHash)) {
-				System.out.println("bruh69");
 				JFrame frame1 = new JFrame("Logged in successfully!");
 				frame1.setPreferredSize(new Dimension(450, 100));
 	            launchFrame(frame1, "Your credentials were found in the database. Close this window to continue.");
@@ -223,7 +296,6 @@ public class LoginForm implements ActionListener{
 	            });
 			}
 			else {
-				System.out.println("noBruh");
 				JFrame frame1 = new JFrame("Login failed!");
 				frame1.setPreferredSize(new Dimension(250, 100));
 				launchFrame(frame1, "Please check your credentials.");

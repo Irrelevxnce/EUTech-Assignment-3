@@ -437,6 +437,7 @@ public class WelcomePage {
 		viewButton.addActionListener(e -> {
 			try {
 				JFrame frame1 = new JFrame("View Inventory");
+				frame1.setIconImage(Toolkit.getDefaultToolkit().getImage(LoginForm.class.getResource("/com/irrelevxnce/img/EuTech_logo.png")));
 				frame1.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 				JPanel panel1 = new JPanel();
 	            panel1.setLayout(new BoxLayout(panel1, BoxLayout.Y_AXIS));
@@ -769,7 +770,6 @@ public class WelcomePage {
 		addButton.addActionListener(e -> {
 			try {
 				if (edc.getAdminStatus(username)) {
-					System.out.println("seks");
 					JFrame frame1 = new JFrame("Add User");
 				    frame1.setIconImage(Toolkit.getDefaultToolkit().getImage(LoginForm.class.getResource("/com/irrelevxnce/img/EuTech_logo.png")));
 				    frame1.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);

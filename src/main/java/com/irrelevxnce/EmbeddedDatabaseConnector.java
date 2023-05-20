@@ -14,7 +14,8 @@ import javax.swing.JFrame;
 public class EmbeddedDatabaseConnector {
     public HashMap<String, String> loginToParse= new HashMap<>();
     public String tableName;
-    String url = "jdbc:derby:UIDSecrets;create=true";
+    String docFolder = System.getProperty("user.home") + "/Documents/";
+    String url = "jdbc:derby:" + docFolder + "UIDSecrets;create=true";
     private Connection connection;
     public HashMap<Integer, String> items = new HashMap<>();
 
@@ -22,6 +23,24 @@ public class EmbeddedDatabaseConnector {
         connection = DriverManager.getConnection(url);
         System.out.println("Database Created.");
         Statement s = connection.createStatement();
+        try {
+        	s.executeQuery("SELECT * FROM UIDSecrets");
+        } catch (Exception e) {
+        	s.executeUpdate("CREATE TABLE UIDSecrets (\r\n"
+        			+ " User_no  INT NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),\r\n"
+        			+ " UID  VARCHAR(15), \r\n"
+        			+ " Secret      VARCHAR(35),\r\n"
+        			+ " IsAdmin 	BOOLEAN\r\n"
+        			+ ")");
+        	s.executeUpdate("CREATE TABLE Inventory (\r\n"
+        			+ " Item_no 	INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),\r\n"
+        			+ " ItemID 	VARCHAR(20), \r\n"
+        			+ " Amount      VARCHAR(5),\r\n"
+        			+ " Description VARCHAR(50),\r\n"
+        			+ " Price 	VARCHAR(5)\r\n"
+        			+ ")");
+        	System.out.println("xddddd");
+        }
         if (!creating) {
         	 if (UIDSecrets) {
         		 ResultSet rs = s.executeQuery("SELECT * FROM UIDSecrets");
