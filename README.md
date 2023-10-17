@@ -36,4 +36,4 @@ Regular users only have access to the following tools:
    Allows the user to export the entire inventory to a PDF file named MostRecentReport.pdf, which is stored in the Documents folder.
    
 ### Code Details
-Written 100% in Java. User Interface built using Java Swing. Database created using Apache Derby. Made by Irrelevxnce.
+Written 100% in Java. User Interface built using Java Swing. Database created using Apache Derby.
